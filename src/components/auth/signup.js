@@ -5,8 +5,17 @@ import * as actions from '../../actions';
 
 class Signup extends Component{
     handleFormSubmit(formProps){
-        // console.log(formProps);
-        this.props.signupUser({formProps});
+
+        console.log(formProps);
+
+        this.props.signupUser(formProps);
+    }
+    renderAlert(){
+        if (this.props.errorMessage) {
+            <div className = 'alert alert-danger'>
+                <strong>Oop!</strong>{this.props.errorMessage}
+            </div>
+        }
     }
 
     render() {
@@ -39,7 +48,7 @@ class Signup extends Component{
               <label>PasswordConfirm:</label>
               <Field className = 'form-control' name="passwordConfirm" component={renderInput} type="password" />
             </fieldset>
-
+            {this.renderAlert()}
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>
       )
@@ -65,8 +74,12 @@ function validate(formProps){
     return errors;
 }
 
+function mapStateToProps(state){
+    return { errorMessage: state.auth.error}
+}
+
 const form = reduxForm({
     form: 'signup',
     validate
     })(Signup)
-export default connect(null, actions)(form)
+export default connect(mapStateToProps, actions)(form)
